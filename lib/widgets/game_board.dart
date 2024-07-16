@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class GameBoard extends StatefulWidget {
   const GameBoard({
-    this.showDebugLines = true,
+    this.showDebugLines = false,
     this.gridGuideThickness = 1,
     required this.borderThickness,
     required this.game,
@@ -28,16 +28,18 @@ class _GameBoardState extends State<GameBoard> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final children = <Widget>[];
-        final insideBorderConstraints = BoxConstraints.expand(
-          height: constraints.maxHeight - widget.borderThickness * 2,
-          width: constraints.maxWidth - widget.borderThickness * 2,
+        final builder = BoardBuilder(
+          borderThickness: widget.borderThickness,
+          gridGuideThickness: widget.gridGuideThickness,
+          squareSize: widget.squareSize,
+          totalSize: constraints.biggest,
         );
 
-        children.addAll(_buildGridGuide(insideBorderConstraints));
-        children.addAll(_buildBorders(constraints));
+        final children = <Widget>[];
+        children.addAll(_buildGridGuide(builder));
+        children.addAll(_buildBorders(builder));
         children.addAll(
-          _buildNumbers(insideBorderConstraints, widget.game.state),
+          _buildNumbers(builder, widget.game.state),
         );
 
         return Stack(children: children);
@@ -45,76 +47,55 @@ class _GameBoardState extends State<GameBoard> {
     );
   }
 
-  List<Widget> _buildGridGuide(BoxConstraints constraints) {
+  List<Widget> _buildGridGuide(BoardBuilder builder) {
     final widgets = [
-      ...(widget.game.state.board.numCols).build<GridGuideline>(
-        (index) => GridGuideline(
-          borderThickness: widget.borderThickness,
-          direction: Direction.vertical,
-          index: index,
-          numGuides: widget.game.state.board.numCols,
-          size: Size(widget.gridGuideThickness, constraints.maxHeight),
-          squareSize: widget.squareSize,
-        ),
+      ...(widget.game.state.board.numCols - 1).build<Positioned>(
+        (index) => builder
+            .gridGuidelinePosition(
+              Direction.vertical,
+              index,
+            )
+            .toWidget(child: const ColoredBox(color: Colors.grey)),
       ),
-      ...(widget.game.state.board.numRows).build<GridGuideline>(
-        (index) => GridGuideline(
-          borderThickness: widget.borderThickness,
-          direction: Direction.horizontal,
-          index: index,
-          numGuides: widget.game.state.board.numRows,
-          size: Size(constraints.maxWidth, widget.gridGuideThickness),
-          squareSize: widget.squareSize,
-        ),
+      ...(widget.game.state.board.numRows - 1).build<Positioned>(
+        (index) => builder
+            .gridGuidelinePosition(
+              Direction.horizontal,
+              index,
+            )
+            .toWidget(child: const ColoredBox(color: Colors.grey)),
       ),
     ];
     return widgets;
   }
 
-  List<Widget> _buildBorders(BoxConstraints constraints) {
-    return Origin.values
-        .map<BoardBorder>(
-          (origin) => BoardBorder(
-            side: origin,
-            boardSize: Size(constraints.maxWidth, constraints.maxHeight),
-            isActive: origin == widget.game.state.nextNumberOrigin,
-            thickness: widget.borderThickness,
-          ),
-        )
-        .toList();
+  List<Widget> _buildBorders(BoardBuilder builder) {
+    return Origin.values.map<Positioned>(
+      (origin) {
+        final isActive = origin == widget.game.state.nextNumberOrigin;
+        return builder.boardBorderPosition(origin, isActive).toWidget(
+              child: ColoredBox(color: isActive ? Colors.red : Colors.blue),
+            );
+      },
+    ).toList();
   }
 
-  List<Widget> _buildNumbers(BoxConstraints constraints, GameState state) {
-    final innerSquareSize = Size(
-      widget.squareSize.width - (widget.gridGuideThickness * 2) + 1,
-      widget.squareSize.height - (widget.gridGuideThickness * 2) + 1,
-    );
-
+  List<Widget> _buildNumbers(BoardBuilder builder, GameState state) {
     final numbers = <Widget>[];
     for (final (int rowIndex, List<int?> row) in state.board.rowsIndexed) {
       for (final (int colIndex, int? number) in row.indexed) {
         if (number != null) {
           numbers.add(
-            Positioned(
-              top: (widget.squareSize.height * rowIndex) +
-                  widget.borderThickness +
-                  // Add space for the undrawn top grey border
-                  widget.gridGuideThickness,
-              left: (widget.squareSize.width * colIndex) +
-                  widget.borderThickness +
-                  // Add space for the undrawn left grey border
-                  widget.gridGuideThickness,
-              height: innerSquareSize.height,
-              width: innerSquareSize.width,
-              child: Container(
-                decoration: widget.showDebugLines
-                    ? BoxDecoration(border: Border.all(color: Colors.green))
-                    : null,
-                child: Center(
-                  child: Text(number.toString()),
+            builder.getSquarePosition(colIndex, rowIndex).toWidget(
+                  child: Container(
+                    decoration: widget.showDebugLines
+                        ? BoxDecoration(border: Border.all(color: Colors.green))
+                        : null,
+                    child: Center(
+                      child: Text(number.toString()),
+                    ),
+                  ),
                 ),
-              ),
-            ),
           );
         }
       }
