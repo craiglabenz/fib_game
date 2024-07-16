@@ -1,4 +1,5 @@
 import 'package:fib_game/game/game.dart';
+import 'package:fib_game/utils/utils.dart';
 import 'package:fib_game/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -37,62 +38,36 @@ class _GameBoardState extends State<GameBoard> {
           _buildNumbers(insideBorderConstraints, widget.game.state),
         );
 
-        return Stack(
-          children: children,
-        );
+        return Stack(children: children);
       },
     );
   }
 
   List<Widget> _buildGridGuide(BoxConstraints constraints) {
     return [
-      // First vertical
-      Positioned(
-        top: widget.borderThickness,
-        left: constraints.maxWidth * 0.25,
-        height: constraints.maxHeight,
-        width: widget.gridGuideThickness,
-        child: const ColoredBox(color: Colors.grey),
+      ...(widget.game.state.numCols - 1).build<GridGuideline>(
+        (index) => GridGuideline(
+          boardSize: constraints.biggest,
+          borderThickness: widget.borderThickness,
+          direction: Direction.vertical,
+          index: index,
+          numCols: widget.game.state.numCols,
+          numRows: widget.game.state.numRows,
+          size: Size(widget.gridGuideThickness, constraints.maxHeight),
+          key: ValueKey('vertical-$index'),
+        ),
       ),
-      // Second vertical
-      Positioned(
-        top: widget.borderThickness,
-        left: constraints.maxWidth * 0.5,
-        height: constraints.maxHeight,
-        width: widget.gridGuideThickness,
-        child: const ColoredBox(color: Colors.grey),
-      ),
-      // Third vertical
-      Positioned(
-        top: widget.borderThickness,
-        left: constraints.maxWidth * 0.75,
-        height: constraints.maxHeight,
-        width: widget.gridGuideThickness,
-        child: const ColoredBox(color: Colors.grey),
-      ),
-      // First horizontal
-      Positioned(
-        top: constraints.maxHeight * 0.25,
-        left: widget.borderThickness,
-        height: widget.gridGuideThickness,
-        width: constraints.maxWidth,
-        child: const ColoredBox(color: Colors.grey),
-      ),
-      // Second horizontal
-      Positioned(
-        top: constraints.maxHeight * 0.5,
-        left: widget.borderThickness,
-        height: widget.gridGuideThickness,
-        width: constraints.maxWidth,
-        child: const ColoredBox(color: Colors.grey),
-      ),
-      // Third horizontal
-      Positioned(
-        top: constraints.maxHeight * 0.75,
-        left: widget.borderThickness,
-        height: widget.gridGuideThickness,
-        width: constraints.maxWidth,
-        child: const ColoredBox(color: Colors.grey),
+      ...(widget.game.state.numRows - 1).build<GridGuideline>(
+        (index) => GridGuideline(
+          boardSize: constraints.biggest,
+          borderThickness: widget.borderThickness,
+          direction: Direction.horizontal,
+          index: index,
+          numCols: widget.game.state.numCols,
+          numRows: widget.game.state.numRows,
+          size: Size(constraints.maxWidth, widget.gridGuideThickness),
+          key: ValueKey('horizontal-$index'),
+        ),
       ),
     ];
   }
