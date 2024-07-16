@@ -1,12 +1,16 @@
 import 'dart:math';
+import 'package:fib_game/game/game.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fib_game/widgets/widgets.dart';
 
 class GameArea extends StatelessWidget {
   const GameArea({
     this.padding = const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+    required this.game,
     super.key,
   });
+
+  final FibGame game;
 
   /// Blank space around the GameBoard. Values in [padding] are treated as
   /// percentages, not raw pixel values.
@@ -37,7 +41,7 @@ class GameArea extends StatelessWidget {
               top: (constraints.maxHeight - functionalSize) / 2,
               height: functionalSize,
               width: functionalSize,
-              child: const GameBoard(),
+              child: GameBoard(game: game),
             ),
             Positioned(
               bottom: constraints.maxHeight * 0.05,
