@@ -1,4 +1,5 @@
 import 'package:fib_game/game/game.dart';
+import 'package:fib_game/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class GameBoard extends StatefulWidget {
@@ -97,40 +98,16 @@ class _GameBoardState extends State<GameBoard> {
   }
 
   List<Widget> _buildBorders(BoxConstraints constraints) {
-    return [
-      // Top border
-      Positioned(
-        top: 0,
-        left: 0,
-        height: 2,
-        width: constraints.maxWidth,
-        child: const ColoredBox(color: Colors.blue),
-      ),
-      // Left border
-      Positioned(
-        top: 0,
-        left: 0,
-        width: 2,
-        height: constraints.maxHeight,
-        child: const ColoredBox(color: Colors.blue),
-      ),
-      // Right border
-      Positioned(
-        top: 0,
-        right: 0,
-        width: 2,
-        height: constraints.maxHeight,
-        child: const ColoredBox(color: Colors.blue),
-      ),
-      // Bottom border
-      Positioned(
-        bottom: 0,
-        left: 0,
-        height: 2,
-        width: constraints.maxWidth,
-        child: const ColoredBox(color: Colors.blue),
-      ),
-    ];
+    return Origin.values
+        .map<BoardBorder>(
+          (origin) => BoardBorder(
+            side: origin,
+            boardSize: Size(constraints.maxHeight, constraints.maxWidth),
+            isActive: origin == widget.game.state.nextNumberOrigin,
+            thickness: widget.borderThickness,
+          ),
+        )
+        .toList();
   }
 
   List<Widget> _buildNumbers(BoxConstraints constraints, GameState state) {
