@@ -3,3 +3,6 @@ app/build:
 
 app/run:
 	flutter run -d macos
+
+app/test:
+	flutter test

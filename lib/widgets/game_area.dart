@@ -29,7 +29,6 @@ class GameArea extends StatelessWidget {
         final availableWidth = constraints.maxWidth * gameBoardWidth;
 
         final functionalSize = min(availableWidth, availableHeight);
-        print('functional size: $functionalSize');
 
         final confirmButtonSize = min(constraints.maxWidth * 0.6, 200.0);
 
@@ -49,7 +48,7 @@ class GameArea extends StatelessWidget {
               height: constraints.maxHeight * 0.1,
               left: (constraints.maxWidth - confirmButtonSize) / 2,
               width: confirmButtonSize,
-              child: ConfirmMoveButton(),
+              child: const ConfirmMoveButton(),
             ),
           ],
         );

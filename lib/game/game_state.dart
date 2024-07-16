@@ -7,23 +7,16 @@ part 'game_state.freezed.dart';
 class GameState with _$GameState {
   const GameState._();
   const factory GameState({
-    @Default(startingBoard) List<List<int?>> board,
+    required Board board,
     required Origin nextNumberOrigin,
     required int nextNumber,
+    @Default(4) int numRows,
+    @Default(4) int numCols,
   }) = _GameState;
 
-  int get numRows => 4;
-  int get numCols => 4;
-
-  factory GameState.initial() => GameState(
+  factory GameState.initial([Board? board]) => GameState(
+        board: board ?? (Board.square(4)..populate()),
         nextNumberOrigin: Origin.random,
         nextNumber: 1,
       );
 }
-
-const List<List<int?>> startingBoard = [
-  [null, null, null, null],
-  [null, 1, null, 2],
-  [null, null, 1, null],
-  [null, null, null, 3],
-];

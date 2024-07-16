@@ -94,7 +94,7 @@ class _GameBoardState extends State<GameBoard> {
             state.numRows;
 
     final numbers = <Widget>[];
-    for (final (int rowIndex, List<int?> row) in state.board.indexed) {
+    for (final (int rowIndex, List<int?> row) in state.board.rowsIndexed) {
       for (final (int colIndex, int? number) in row.indexed) {
         if (number != null) {
           numbers.add(

@@ -16,9 +16,11 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$GameState {
-  List<List<int?>> get board => throw _privateConstructorUsedError;
+  Board get board => throw _privateConstructorUsedError;
   Origin get nextNumberOrigin => throw _privateConstructorUsedError;
   int get nextNumber => throw _privateConstructorUsedError;
+  int get numRows => throw _privateConstructorUsedError;
+  int get numCols => throw _privateConstructorUsedError;
 
   /// Create a copy of GameState
   /// with the given fields replaced by the non-null parameter values.
@@ -32,7 +34,12 @@ abstract class $GameStateCopyWith<$Res> {
   factory $GameStateCopyWith(GameState value, $Res Function(GameState) then) =
       _$GameStateCopyWithImpl<$Res, GameState>;
   @useResult
-  $Res call({List<List<int?>> board, Origin nextNumberOrigin, int nextNumber});
+  $Res call(
+      {Board board,
+      Origin nextNumberOrigin,
+      int nextNumber,
+      int numRows,
+      int numCols});
 }
 
 /// @nodoc
@@ -53,12 +60,14 @@ class _$GameStateCopyWithImpl<$Res, $Val extends GameState>
     Object? board = null,
     Object? nextNumberOrigin = null,
     Object? nextNumber = null,
+    Object? numRows = null,
+    Object? numCols = null,
   }) {
     return _then(_value.copyWith(
       board: null == board
           ? _value.board
           : board // ignore: cast_nullable_to_non_nullable
-              as List<List<int?>>,
+              as Board,
       nextNumberOrigin: null == nextNumberOrigin
           ? _value.nextNumberOrigin
           : nextNumberOrigin // ignore: cast_nullable_to_non_nullable
@@ -66,6 +75,14 @@ class _$GameStateCopyWithImpl<$Res, $Val extends GameState>
       nextNumber: null == nextNumber
           ? _value.nextNumber
           : nextNumber // ignore: cast_nullable_to_non_nullable
+              as int,
+      numRows: null == numRows
+          ? _value.numRows
+          : numRows // ignore: cast_nullable_to_non_nullable
+              as int,
+      numCols: null == numCols
+          ? _value.numCols
+          : numCols // ignore: cast_nullable_to_non_nullable
               as int,
     ) as $Val);
   }
@@ -79,7 +96,12 @@ abstract class _$$GameStateImplCopyWith<$Res>
       __$$GameStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<List<int?>> board, Origin nextNumberOrigin, int nextNumber});
+  $Res call(
+      {Board board,
+      Origin nextNumberOrigin,
+      int nextNumber,
+      int numRows,
+      int numCols});
 }
 
 /// @nodoc
@@ -98,12 +120,14 @@ class __$$GameStateImplCopyWithImpl<$Res>
     Object? board = null,
     Object? nextNumberOrigin = null,
     Object? nextNumber = null,
+    Object? numRows = null,
+    Object? numCols = null,
   }) {
     return _then(_$GameStateImpl(
       board: null == board
-          ? _value._board
+          ? _value.board
           : board // ignore: cast_nullable_to_non_nullable
-              as List<List<int?>>,
+              as Board,
       nextNumberOrigin: null == nextNumberOrigin
           ? _value.nextNumberOrigin
           : nextNumberOrigin // ignore: cast_nullable_to_non_nullable
@@ -111,6 +135,14 @@ class __$$GameStateImplCopyWithImpl<$Res>
       nextNumber: null == nextNumber
           ? _value.nextNumber
           : nextNumber // ignore: cast_nullable_to_non_nullable
+              as int,
+      numRows: null == numRows
+          ? _value.numRows
+          : numRows // ignore: cast_nullable_to_non_nullable
+              as int,
+      numCols: null == numCols
+          ? _value.numCols
+          : numCols // ignore: cast_nullable_to_non_nullable
               as int,
     ));
   }
@@ -120,29 +152,29 @@ class __$$GameStateImplCopyWithImpl<$Res>
 
 class _$GameStateImpl extends _GameState {
   const _$GameStateImpl(
-      {final List<List<int?>> board = startingBoard,
+      {required this.board,
       required this.nextNumberOrigin,
-      required this.nextNumber})
-      : _board = board,
-        super._();
+      required this.nextNumber,
+      this.numRows = 4,
+      this.numCols = 4})
+      : super._();
 
-  final List<List<int?>> _board;
   @override
-  @JsonKey()
-  List<List<int?>> get board {
-    if (_board is EqualUnmodifiableListView) return _board;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_board);
-  }
-
+  final Board board;
   @override
   final Origin nextNumberOrigin;
   @override
   final int nextNumber;
+  @override
+  @JsonKey()
+  final int numRows;
+  @override
+  @JsonKey()
+  final int numCols;
 
   @override
   String toString() {
-    return 'GameState(board: $board, nextNumberOrigin: $nextNumberOrigin, nextNumber: $nextNumber)';
+    return 'GameState(board: $board, nextNumberOrigin: $nextNumberOrigin, nextNumber: $nextNumber, numRows: $numRows, numCols: $numCols)';
   }
 
   @override
@@ -150,19 +182,18 @@ class _$GameStateImpl extends _GameState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$GameStateImpl &&
-            const DeepCollectionEquality().equals(other._board, _board) &&
+            (identical(other.board, board) || other.board == board) &&
             (identical(other.nextNumberOrigin, nextNumberOrigin) ||
                 other.nextNumberOrigin == nextNumberOrigin) &&
             (identical(other.nextNumber, nextNumber) ||
-                other.nextNumber == nextNumber));
+                other.nextNumber == nextNumber) &&
+            (identical(other.numRows, numRows) || other.numRows == numRows) &&
+            (identical(other.numCols, numCols) || other.numCols == numCols));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_board),
-      nextNumberOrigin,
-      nextNumber);
+      runtimeType, board, nextNumberOrigin, nextNumber, numRows, numCols);
 
   /// Create a copy of GameState
   /// with the given fields replaced by the non-null parameter values.
@@ -175,17 +206,23 @@ class _$GameStateImpl extends _GameState {
 
 abstract class _GameState extends GameState {
   const factory _GameState(
-      {final List<List<int?>> board,
+      {required final Board board,
       required final Origin nextNumberOrigin,
-      required final int nextNumber}) = _$GameStateImpl;
+      required final int nextNumber,
+      final int numRows,
+      final int numCols}) = _$GameStateImpl;
   const _GameState._() : super._();
 
   @override
-  List<List<int?>> get board;
+  Board get board;
   @override
   Origin get nextNumberOrigin;
   @override
   int get nextNumber;
+  @override
+  int get numRows;
+  @override
+  int get numCols;
 
   /// Create a copy of GameState
   /// with the given fields replaced by the non-null parameter values.

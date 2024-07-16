@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ConfirmMoveButton extends StatelessWidget {
+  const ConfirmMoveButton({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(

@@ -10,7 +10,7 @@ class GameWidget extends StatefulWidget {
 }
 
 class _GameWidgetState extends State<GameWidget> {
-  FibGame game = FibGame(GameState.initial());
+  FibGame game = FibGame(GameState.initial(Board.square(5)..populate()));
 
   @override
   Widget build(BuildContext context) {
