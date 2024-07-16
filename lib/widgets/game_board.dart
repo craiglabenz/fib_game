@@ -6,9 +6,10 @@ import 'package:flutter/material.dart';
 class GameBoard extends StatefulWidget {
   const GameBoard({
     this.showDebugLines = true,
-    this.borderThickness = 2,
     this.gridGuideThickness = 1,
+    required this.borderThickness,
     required this.game,
+    required this.squareSize,
     super.key,
   });
 
@@ -16,6 +17,7 @@ class GameBoard extends StatefulWidget {
   final bool showDebugLines;
   final double borderThickness;
   final double gridGuideThickness;
+  final Size squareSize;
 
   @override
   State<GameBoard> createState() => _GameBoardState();
@@ -32,8 +34,8 @@ class _GameBoardState extends State<GameBoard> {
           width: constraints.maxWidth - widget.borderThickness * 2,
         );
 
-        children.addAll(_buildBorders(constraints));
         children.addAll(_buildGridGuide(insideBorderConstraints));
+        children.addAll(_buildBorders(constraints));
         children.addAll(
           _buildNumbers(insideBorderConstraints, widget.game.state),
         );
@@ -44,32 +46,29 @@ class _GameBoardState extends State<GameBoard> {
   }
 
   List<Widget> _buildGridGuide(BoxConstraints constraints) {
-    return [
-      ...(widget.game.state.numCols - 1).build<GridGuideline>(
+    final widgets = [
+      ...(widget.game.state.board.numCols).build<GridGuideline>(
         (index) => GridGuideline(
-          boardSize: constraints.biggest,
           borderThickness: widget.borderThickness,
           direction: Direction.vertical,
           index: index,
-          numCols: widget.game.state.numCols,
-          numRows: widget.game.state.numRows,
+          numGuides: widget.game.state.board.numCols,
           size: Size(widget.gridGuideThickness, constraints.maxHeight),
-          key: ValueKey('vertical-$index'),
+          squareSize: widget.squareSize,
         ),
       ),
-      ...(widget.game.state.numRows - 1).build<GridGuideline>(
+      ...(widget.game.state.board.numRows).build<GridGuideline>(
         (index) => GridGuideline(
-          boardSize: constraints.biggest,
           borderThickness: widget.borderThickness,
           direction: Direction.horizontal,
           index: index,
-          numCols: widget.game.state.numCols,
-          numRows: widget.game.state.numRows,
+          numGuides: widget.game.state.board.numRows,
           size: Size(constraints.maxWidth, widget.gridGuideThickness),
-          key: ValueKey('horizontal-$index'),
+          squareSize: widget.squareSize,
         ),
       ),
     ];
+    return widgets;
   }
 
   List<Widget> _buildBorders(BoxConstraints constraints) {
@@ -77,7 +76,7 @@ class _GameBoardState extends State<GameBoard> {
         .map<BoardBorder>(
           (origin) => BoardBorder(
             side: origin,
-            boardSize: Size(constraints.maxHeight, constraints.maxWidth),
+            boardSize: Size(constraints.maxWidth, constraints.maxHeight),
             isActive: origin == widget.game.state.nextNumberOrigin,
             thickness: widget.borderThickness,
           ),
@@ -86,12 +85,10 @@ class _GameBoardState extends State<GameBoard> {
   }
 
   List<Widget> _buildNumbers(BoxConstraints constraints, GameState state) {
-    final cellHeight =
-        (constraints.maxHeight - (widget.gridGuideThickness * state.numCols)) /
-            state.numCols;
-    final cellWidth =
-        (constraints.maxWidth - (widget.gridGuideThickness * state.numRows)) /
-            state.numRows;
+    final innerSquareSize = Size(
+      widget.squareSize.width - (widget.gridGuideThickness * 2) + 1,
+      widget.squareSize.height - (widget.gridGuideThickness * 2) + 1,
+    );
 
     final numbers = <Widget>[];
     for (final (int rowIndex, List<int?> row) in state.board.rowsIndexed) {
@@ -99,14 +96,23 @@ class _GameBoardState extends State<GameBoard> {
         if (number != null) {
           numbers.add(
             Positioned(
-              top: ((cellHeight + widget.gridGuideThickness) * rowIndex) +
-                  widget.borderThickness,
-              left: ((cellWidth + widget.gridGuideThickness) * colIndex) +
-                  widget.borderThickness,
-              height: cellHeight,
-              width: cellWidth,
-              child: Center(
-                child: Text(number.toString()),
+              top: (widget.squareSize.height * rowIndex) +
+                  widget.borderThickness +
+                  // Add space for the undrawn top grey border
+                  widget.gridGuideThickness,
+              left: (widget.squareSize.width * colIndex) +
+                  widget.borderThickness +
+                  // Add space for the undrawn left grey border
+                  widget.gridGuideThickness,
+              height: innerSquareSize.height,
+              width: innerSquareSize.width,
+              child: Container(
+                decoration: widget.showDebugLines
+                    ? BoxDecoration(border: Border.all(color: Colors.green))
+                    : null,
+                child: Center(
+                  child: Text(number.toString()),
+                ),
               ),
             ),
           );

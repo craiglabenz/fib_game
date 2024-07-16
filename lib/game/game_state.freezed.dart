@@ -19,8 +19,6 @@ mixin _$GameState {
   Board get board => throw _privateConstructorUsedError;
   Origin get nextNumberOrigin => throw _privateConstructorUsedError;
   int get nextNumber => throw _privateConstructorUsedError;
-  int get numRows => throw _privateConstructorUsedError;
-  int get numCols => throw _privateConstructorUsedError;
 
   /// Create a copy of GameState
   /// with the given fields replaced by the non-null parameter values.
@@ -34,12 +32,7 @@ abstract class $GameStateCopyWith<$Res> {
   factory $GameStateCopyWith(GameState value, $Res Function(GameState) then) =
       _$GameStateCopyWithImpl<$Res, GameState>;
   @useResult
-  $Res call(
-      {Board board,
-      Origin nextNumberOrigin,
-      int nextNumber,
-      int numRows,
-      int numCols});
+  $Res call({Board board, Origin nextNumberOrigin, int nextNumber});
 }
 
 /// @nodoc
@@ -60,8 +53,6 @@ class _$GameStateCopyWithImpl<$Res, $Val extends GameState>
     Object? board = null,
     Object? nextNumberOrigin = null,
     Object? nextNumber = null,
-    Object? numRows = null,
-    Object? numCols = null,
   }) {
     return _then(_value.copyWith(
       board: null == board
@@ -76,14 +67,6 @@ class _$GameStateCopyWithImpl<$Res, $Val extends GameState>
           ? _value.nextNumber
           : nextNumber // ignore: cast_nullable_to_non_nullable
               as int,
-      numRows: null == numRows
-          ? _value.numRows
-          : numRows // ignore: cast_nullable_to_non_nullable
-              as int,
-      numCols: null == numCols
-          ? _value.numCols
-          : numCols // ignore: cast_nullable_to_non_nullable
-              as int,
     ) as $Val);
   }
 }
@@ -96,12 +79,7 @@ abstract class _$$GameStateImplCopyWith<$Res>
       __$$GameStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {Board board,
-      Origin nextNumberOrigin,
-      int nextNumber,
-      int numRows,
-      int numCols});
+  $Res call({Board board, Origin nextNumberOrigin, int nextNumber});
 }
 
 /// @nodoc
@@ -120,8 +98,6 @@ class __$$GameStateImplCopyWithImpl<$Res>
     Object? board = null,
     Object? nextNumberOrigin = null,
     Object? nextNumber = null,
-    Object? numRows = null,
-    Object? numCols = null,
   }) {
     return _then(_$GameStateImpl(
       board: null == board
@@ -136,14 +112,6 @@ class __$$GameStateImplCopyWithImpl<$Res>
           ? _value.nextNumber
           : nextNumber // ignore: cast_nullable_to_non_nullable
               as int,
-      numRows: null == numRows
-          ? _value.numRows
-          : numRows // ignore: cast_nullable_to_non_nullable
-              as int,
-      numCols: null == numCols
-          ? _value.numCols
-          : numCols // ignore: cast_nullable_to_non_nullable
-              as int,
     ));
   }
 }
@@ -154,9 +122,7 @@ class _$GameStateImpl extends _GameState {
   const _$GameStateImpl(
       {required this.board,
       required this.nextNumberOrigin,
-      required this.nextNumber,
-      this.numRows = 4,
-      this.numCols = 4})
+      required this.nextNumber})
       : super._();
 
   @override
@@ -165,16 +131,10 @@ class _$GameStateImpl extends _GameState {
   final Origin nextNumberOrigin;
   @override
   final int nextNumber;
-  @override
-  @JsonKey()
-  final int numRows;
-  @override
-  @JsonKey()
-  final int numCols;
 
   @override
   String toString() {
-    return 'GameState(board: $board, nextNumberOrigin: $nextNumberOrigin, nextNumber: $nextNumber, numRows: $numRows, numCols: $numCols)';
+    return 'GameState(board: $board, nextNumberOrigin: $nextNumberOrigin, nextNumber: $nextNumber)';
   }
 
   @override
@@ -186,14 +146,12 @@ class _$GameStateImpl extends _GameState {
             (identical(other.nextNumberOrigin, nextNumberOrigin) ||
                 other.nextNumberOrigin == nextNumberOrigin) &&
             (identical(other.nextNumber, nextNumber) ||
-                other.nextNumber == nextNumber) &&
-            (identical(other.numRows, numRows) || other.numRows == numRows) &&
-            (identical(other.numCols, numCols) || other.numCols == numCols));
+                other.nextNumber == nextNumber));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, board, nextNumberOrigin, nextNumber, numRows, numCols);
+  int get hashCode =>
+      Object.hash(runtimeType, board, nextNumberOrigin, nextNumber);
 
   /// Create a copy of GameState
   /// with the given fields replaced by the non-null parameter values.
@@ -208,9 +166,7 @@ abstract class _GameState extends GameState {
   const factory _GameState(
       {required final Board board,
       required final Origin nextNumberOrigin,
-      required final int nextNumber,
-      final int numRows,
-      final int numCols}) = _$GameStateImpl;
+      required final int nextNumber}) = _$GameStateImpl;
   const _GameState._() : super._();
 
   @override
@@ -219,10 +175,6 @@ abstract class _GameState extends GameState {
   Origin get nextNumberOrigin;
   @override
   int get nextNumber;
-  @override
-  int get numRows;
-  @override
-  int get numCols;
 
   /// Create a copy of GameState
   /// with the given fields replaced by the non-null parameter values.

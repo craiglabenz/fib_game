@@ -6,12 +6,12 @@ enum Origin {
   right,
   bottom;
 
-  static Origin get random {
+  static Origin random([Random? rnd]) {
     return <Origin>[
       Origin.left,
       Origin.top,
       Origin.right,
       Origin.bottom
-    ][Random().nextInt(4)];
+    ][(rnd ?? Random()).nextInt(4)];
   }
 }
