@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'direction.dart';
 
 enum Origin {
   left,
@@ -14,4 +15,11 @@ enum Origin {
       Origin.bottom
     ][(rnd ?? Random()).nextInt(4)];
   }
+
+  Direction get direction => switch (this) {
+        Origin.left => Direction.vertical,
+        Origin.right => Direction.vertical,
+        Origin.top => Direction.horizontal,
+        Origin.bottom => Direction.horizontal,
+      };
 }

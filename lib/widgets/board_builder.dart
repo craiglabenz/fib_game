@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 
 class BoardBuilder {
   BoardBuilder({
-    this.padding = const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+    this.padding = const EdgeInsets.fromLTRB(15, 15, 15, 30),
     this.showDebugLines = false,
     required this.borderThickness,
     required this.gridGuideThickness,
@@ -27,6 +27,10 @@ class BoardBuilder {
     final functionalHeight = numRows * squareSize.height + totalBorderThickness;
 
     _gameAreaSize = Size(functionalWidth, functionalHeight);
+    _gameAreaOffset = Size(
+      paddingRaw.left,
+      paddingRaw.top,
+    );
   }
 
   final bool showDebugLines;
@@ -35,15 +39,35 @@ class BoardBuilder {
   /// percentages, not raw pixel values.
   final EdgeInsets padding;
 
+  double get paddingLeftPercent => padding.left * 0.01;
+  double get paddingRightPercent => padding.right * 0.01;
+  double get paddingTopPercent => padding.top * 0.01;
+  double get paddingBottomPercent => padding.bottom * 0.01;
+
+  double get paddingLeftRatio => padding.left / (padding.left + padding.right);
+  double get paddingRightRatio =>
+      padding.right / (padding.left + padding.right);
+  double get paddingTopRatio => padding.top / (padding.top + padding.bottom);
+  double get paddingBottomRatio =>
+      padding.bottom / (padding.top + padding.bottom);
+
+  /// Computed pixel values of `padding` after centering and scaling the game
+  /// board.
+  EdgeInsets get paddingRaw => _paddingRaw ??= EdgeInsets.fromLTRB(
+        (windowSize.width - gameAreaSize.width) * paddingLeftRatio,
+        (windowSize.height - gameAreaSize.height) * paddingTopRatio,
+        (windowSize.width - gameAreaSize.width) * paddingRightRatio,
+        (windowSize.height - gameAreaSize.height) * paddingBottomRatio,
+      );
+  EdgeInsets? _paddingRaw;
+
   /// Percentage of total vertical space available for this board, given padding
   /// rules.
-  double get gameBoardHeight =>
-      1 - (padding.top * 0.01) - (padding.bottom * 0.01);
+  double get gameBoardHeight => 1 - paddingTopPercent - paddingBottomPercent;
 
   /// Percentage of total horizontal space available for this board, given
   /// padding rules.
-  double get gameBoardWidth =>
-      1 - (padding.left * 0.01) - (padding.right * 0.01);
+  double get gameBoardWidth => 1 - paddingLeftPercent - paddingRightPercent;
 
   /// Thickness of the outermost border.
   final double borderThickness;
@@ -73,6 +97,10 @@ class BoardBuilder {
         gameAreaSize.height - borderThickness * 2,
       );
 
+  /// Distance between the top-left of the game board and the window's top left.
+  Size get gameAreaOffset => _gameAreaOffset!;
+  Size? _gameAreaOffset;
+
   BoxConstraints get insideBorderConstraints => BoxConstraints.expand(
         height: gameAreaSize.height - borderThickness * 2,
         width: gameAreaSize.width - borderThickness * 2,
@@ -83,11 +111,43 @@ class BoardBuilder {
   final Size windowSize;
 
   Position gameBoardPosition() => Position(
-        left: (windowSize.width - gameAreaSize.width) / 2,
-        top: (windowSize.height - gameAreaSize.height) / 2,
+        left: gameAreaOffset.width,
+        top: gameAreaOffset.height,
         width: gameAreaSize.width,
         height: gameAreaSize.height,
       );
+
+  Position nextNumberIndicatorPosition(Origin side) {
+    final verticalPadding = (windowSize.height * 0.04);
+    final horizontalPadding = (windowSize.width * 0.04);
+    final position = switch (side) {
+      Origin.top => Position(
+          top: paddingRaw.top - verticalPadding,
+          left: paddingRaw.left,
+          height: verticalPadding,
+          width: gameAreaSize.width,
+        ),
+      Origin.bottom => Position(
+          bottom: paddingRaw.bottom - verticalPadding,
+          left: gameAreaOffset.width,
+          height: verticalPadding,
+          width: gameAreaSize.width,
+        ),
+      Origin.left => Position(
+          left: gameAreaOffset.width - horizontalPadding,
+          top: gameAreaOffset.height,
+          width: horizontalPadding,
+          height: gameAreaSize.height,
+        ),
+      Origin.right => Position(
+          right: paddingRaw.right - horizontalPadding,
+          top: gameAreaOffset.height,
+          width: horizontalPadding,
+          height: gameAreaSize.height,
+        )
+    };
+    return position;
+  }
 
   Position gridGuidelinePosition(Direction direction, int index) => Position(
         top: (direction.isHorizontal ? squareSize.height * (index + 1) : 0) +

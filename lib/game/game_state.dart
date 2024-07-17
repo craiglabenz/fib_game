@@ -10,11 +10,13 @@ class GameState with _$GameState {
     required Board board,
     required Origin nextNumberOrigin,
     required int nextNumber,
+    required int nextNumberPosition,
   }) = _GameState;
 
   factory GameState.initial([Board? board]) => GameState(
         board: board ?? (Board.square(4)..populate()),
         nextNumberOrigin: Origin.random(),
         nextNumber: 1,
+        nextNumberPosition: 2,
       );
 }

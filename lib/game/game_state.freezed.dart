@@ -19,6 +19,7 @@ mixin _$GameState {
   Board get board => throw _privateConstructorUsedError;
   Origin get nextNumberOrigin => throw _privateConstructorUsedError;
   int get nextNumber => throw _privateConstructorUsedError;
+  int get nextNumberPosition => throw _privateConstructorUsedError;
 
   /// Create a copy of GameState
   /// with the given fields replaced by the non-null parameter values.
@@ -32,7 +33,11 @@ abstract class $GameStateCopyWith<$Res> {
   factory $GameStateCopyWith(GameState value, $Res Function(GameState) then) =
       _$GameStateCopyWithImpl<$Res, GameState>;
   @useResult
-  $Res call({Board board, Origin nextNumberOrigin, int nextNumber});
+  $Res call(
+      {Board board,
+      Origin nextNumberOrigin,
+      int nextNumber,
+      int nextNumberPosition});
 }
 
 /// @nodoc
@@ -53,6 +58,7 @@ class _$GameStateCopyWithImpl<$Res, $Val extends GameState>
     Object? board = null,
     Object? nextNumberOrigin = null,
     Object? nextNumber = null,
+    Object? nextNumberPosition = null,
   }) {
     return _then(_value.copyWith(
       board: null == board
@@ -67,6 +73,10 @@ class _$GameStateCopyWithImpl<$Res, $Val extends GameState>
           ? _value.nextNumber
           : nextNumber // ignore: cast_nullable_to_non_nullable
               as int,
+      nextNumberPosition: null == nextNumberPosition
+          ? _value.nextNumberPosition
+          : nextNumberPosition // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -79,7 +89,11 @@ abstract class _$$GameStateImplCopyWith<$Res>
       __$$GameStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Board board, Origin nextNumberOrigin, int nextNumber});
+  $Res call(
+      {Board board,
+      Origin nextNumberOrigin,
+      int nextNumber,
+      int nextNumberPosition});
 }
 
 /// @nodoc
@@ -98,6 +112,7 @@ class __$$GameStateImplCopyWithImpl<$Res>
     Object? board = null,
     Object? nextNumberOrigin = null,
     Object? nextNumber = null,
+    Object? nextNumberPosition = null,
   }) {
     return _then(_$GameStateImpl(
       board: null == board
@@ -112,6 +127,10 @@ class __$$GameStateImplCopyWithImpl<$Res>
           ? _value.nextNumber
           : nextNumber // ignore: cast_nullable_to_non_nullable
               as int,
+      nextNumberPosition: null == nextNumberPosition
+          ? _value.nextNumberPosition
+          : nextNumberPosition // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -122,7 +141,8 @@ class _$GameStateImpl extends _GameState {
   const _$GameStateImpl(
       {required this.board,
       required this.nextNumberOrigin,
-      required this.nextNumber})
+      required this.nextNumber,
+      required this.nextNumberPosition})
       : super._();
 
   @override
@@ -131,10 +151,12 @@ class _$GameStateImpl extends _GameState {
   final Origin nextNumberOrigin;
   @override
   final int nextNumber;
+  @override
+  final int nextNumberPosition;
 
   @override
   String toString() {
-    return 'GameState(board: $board, nextNumberOrigin: $nextNumberOrigin, nextNumber: $nextNumber)';
+    return 'GameState(board: $board, nextNumberOrigin: $nextNumberOrigin, nextNumber: $nextNumber, nextNumberPosition: $nextNumberPosition)';
   }
 
   @override
@@ -146,12 +168,14 @@ class _$GameStateImpl extends _GameState {
             (identical(other.nextNumberOrigin, nextNumberOrigin) ||
                 other.nextNumberOrigin == nextNumberOrigin) &&
             (identical(other.nextNumber, nextNumber) ||
-                other.nextNumber == nextNumber));
+                other.nextNumber == nextNumber) &&
+            (identical(other.nextNumberPosition, nextNumberPosition) ||
+                other.nextNumberPosition == nextNumberPosition));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, board, nextNumberOrigin, nextNumber);
+  int get hashCode => Object.hash(
+      runtimeType, board, nextNumberOrigin, nextNumber, nextNumberPosition);
 
   /// Create a copy of GameState
   /// with the given fields replaced by the non-null parameter values.
@@ -166,7 +190,8 @@ abstract class _GameState extends GameState {
   const factory _GameState(
       {required final Board board,
       required final Origin nextNumberOrigin,
-      required final int nextNumber}) = _$GameStateImpl;
+      required final int nextNumber,
+      required final int nextNumberPosition}) = _$GameStateImpl;
   const _GameState._() : super._();
 
   @override
@@ -175,6 +200,8 @@ abstract class _GameState extends GameState {
   Origin get nextNumberOrigin;
   @override
   int get nextNumber;
+  @override
+  int get nextNumberPosition;
 
   /// Create a copy of GameState
   /// with the given fields replaced by the non-null parameter values.

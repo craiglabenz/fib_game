@@ -26,6 +26,7 @@ class _GameWidgetState extends State<GameWidget> {
         board: Board(4, 4)..populate(),
         nextNumber: game.randomNextNumber(),
         nextNumberOrigin: Origin.random(rnd),
+        nextNumberPosition: rnd.nextInt(4),
       ),
     );
   }

@@ -27,4 +27,9 @@ class Position {
         key: key,
         child: child,
       );
+
+  @override
+  String toString() =>
+      'Position(left: $left, top: $top, right: $right, bottom: $bottom, '
+      'width: $width, height: $height)';
 }

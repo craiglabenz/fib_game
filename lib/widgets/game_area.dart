@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:fib_game/game/game.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:fib_game/widgets/widgets.dart';
 
 class GameArea extends StatelessWidget {
@@ -36,6 +36,25 @@ class GameArea extends StatelessWidget {
             builder.gameBoardPosition().toWidget(
                   child: GameBoard(game: game, builder: builder),
                 ),
+            builder
+                .nextNumberIndicatorPosition(
+                  game.state.nextNumberOrigin,
+                )
+                .toWidget(
+                  child: NextNumberIndicator(
+                    direction: game.state.nextNumberOrigin.direction,
+                    nextNumber: game.state.nextNumber,
+                    numberPosition: game.state.nextNumberPosition,
+                    totalSlots: game.state.nextNumberOrigin.direction.isVertical
+                        ? game.state.board.numRows
+                        : game.state.board.numCols,
+                  ),
+                ),
+            Positioned(
+              width: builder.gameAreaOffset.width,
+              height: builder.gameAreaOffset.height,
+              child: const ColoredBox(color: Colors.orange),
+            ),
             Positioned(
               bottom: constraints.maxHeight * 0.05,
               left: (constraints.maxWidth - confirmButtonSize) / 2,
